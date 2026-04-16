@@ -7,6 +7,17 @@
 #   - A router interface attaching the subnet to the router
 # ------------------------------
 
+
+terraform {
+  required_providers {
+    openstack = {
+      source  = "terraform-provider-openstack/openstack"
+      version = "~> 1.54.0"
+    }
+  }
+}
+
+
 # Name of the external network (e.g., "Public Internet")
 variable "external_network_name" {
   type = string

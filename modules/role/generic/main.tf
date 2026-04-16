@@ -3,6 +3,15 @@
 # Base security only
 # ------------------------------
 
+terraform {
+  required_providers {
+    openstack = {
+      source  = "terraform-provider-openstack/openstack"
+      version = "~> 1.54.0"
+    }
+  }
+}
+
 module "base" {
   source = "../../security/base"
 }
@@ -18,3 +27,4 @@ module "compute" {
   subnet_id          = var.subnet_id
   security_group_ids = [module.base.id]
 }
+

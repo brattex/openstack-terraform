@@ -3,6 +3,15 @@
 # Base + Public SSH + Web + Floating IP
 # ------------------------------
 
+terraform {
+  required_providers {
+    openstack = {
+      source  = "terraform-provider-openstack/openstack"
+      version = "~> 1.54.0"
+    }
+  }
+}
+
 module "base" {
   source = "../../security/base"
 }
@@ -38,3 +47,4 @@ module "floatingip" {
   external_network_name = var.external_network_name
   port_id               = module.compute.port_id
 }
+

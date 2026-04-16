@@ -5,6 +5,15 @@
 #   - A VM instance attached to that port
 # ------------------------------
 
+terraform {
+  required_providers {
+    openstack = {
+      source  = "terraform-provider-openstack/openstack"
+      version = "~> 1.54.0"
+    }
+  }
+}
+
 variable "name" { type = string }
 variable "flavor_name" { type = string }
 variable "image_id" { type = string }
@@ -37,3 +46,5 @@ resource "openstack_compute_instance_v2" "instance" {
     port = openstack_networking_port_v2.port.id
   }
 }
+
+
