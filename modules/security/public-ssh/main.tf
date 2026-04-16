@@ -1,4 +1,8 @@
-# Public SSH Capability
+# ------------------------------
+# PUBLIC SSH SECURITY GROUP
+# Allows SSH from anywhere.
+# ------------------------------
+
 resource "openstack_networking_secgroup_v2" "public_ssh" {
   name        = "public-ssh"
   description = "Allow SSH from anywhere"
