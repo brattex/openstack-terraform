@@ -1,6 +1,6 @@
 # ------------------------------
-# WEBSERVER ROLE
-# Base + Public SSH + Web + Floating IP
+# MAILSERVER ROLE
+# Base + Public SSH + Mail + Floating IP
 # ------------------------------
 
 module "base" {
@@ -11,8 +11,8 @@ module "public_ssh" {
   source = "../../security/public-ssh"
 }
 
-module "web" {
-  source = "../../security/web"
+module "mail" {
+  source = "../../security/mail"
 }
 
 module "compute" {
@@ -28,7 +28,7 @@ module "compute" {
   security_group_ids = [
     module.base.id,
     module.public_ssh.id,
-    module.web.id,
+    module.mail.id,
   ]
 }
 
