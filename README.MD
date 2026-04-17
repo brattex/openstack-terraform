@@ -3,6 +3,20 @@
 
 *A matter of living in convenience!!!*
 
+# Project Naming Convention
+proj-<role>-<name>
+
+Examples:
+proj-web-abc
+proj-gpu-protein
+proj-mail-test
+proj-generic-sandbox
+
+### TO DO
+
+- new-project.sh to auto-create folder infrastructure using this pattern
+
+
 Repo Layout
 openstack-terraform/
 ├── modules/
