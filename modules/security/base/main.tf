@@ -14,7 +14,7 @@ terraform {
 }
 
 resource "openstack_networking_secgroup_v2" "base" {
-  name        = "base"
+  name = "${var.name}-base"
   description = "Base security group for all machines"
 }
 
