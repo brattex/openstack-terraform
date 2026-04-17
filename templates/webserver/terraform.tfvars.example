@@ -1,0 +1,12 @@
+# ---------------------------------------------------------
+# EXAMPLE VALUES FOR A WEBSERVER PROJECT
+# Copy this file to terraform.tfvars and adjust as needed.
+# ---------------------------------------------------------
+
+instance_name         = "web01"
+external_network_name = "Public Internet"
+
+# Example values — replace with real ones
+flavor_name = "C2.tiny"
+image_id    = "3f6c7f95-e1c7-4473-bd06-f34bdf65eda1"
+key_name    = "T14s OpenStack ed25519"
