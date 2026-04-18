@@ -14,6 +14,7 @@ terraform {
 
 module "base" {
   source = "../../security/base"
+  name   = var.name
 }
 
 module "public_ssh" {
