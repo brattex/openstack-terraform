@@ -3,6 +3,136 @@
 
 *A matter of living in convenience!!!*
 
+***
+
+### *Clean module paths, nested project folders, no `../../`, no global config*
+
+This repository uses a **project‑local Terraform module registry** to provide:
+
+- Clean module paths (`source = "role/webserver"`)
+- Unlimited nested project folders
+- No `../../` relative‑path nonsense		# This is a new feature 😂
+- Local module development without pushing to Git
+- A repo that “just works” when cloned on Linux/WSL/CI
+
+This pattern is the closest thing Terraform has to a **project‑local chroot**, and it is fully supported. I hope!
+
+---
+
+## 🧱 1. Repository Layout
+
+
+---
+
+## 🧭 2. Why This Structure Exists
+
+Terraform normally resolves module paths **relative to the project folder**, 
+which breaks as soon as you introduce nested project folders:
+
+
+This is unmaintainable.
+
+### How it works
+Terraform is instructed to load modules from `terraform.d/modules`
+regardless of where the project lives.
+
+This gives you:
+
+- Clean module paths  
+- Unlimited nested project folders  
+- No path rewrites  
+- No global config  
+- No Git pushes required to test module changes  
+
+---
+
+## ⚙️ 3. Project‑Local Terraform Config (`terraform.d/terraform.rc`)
+
+```hcl
+# terraform.d/terraform.rc
+# ------------------------------------------------------------
+# This file tells Terraform:
+# "When someone writes source = 'role/webserver', load it from
+#  terraform.d/modules/role/webserver instead of using relative paths."
+#
+# This gives you clean module paths and allows nested project folders
+# without ever rewriting ../../ paths.
+
+module_installation {
+  filesystem_mirror {
+    path    = "terraform.d/modules"   # ← Local module registry
+    include = ["*"]                   # ← Include all modules
+  }
+
+  direct {
+    exclude = ["*"]                   # ← Prevent Terraform from fetching modules from the internet
+  }
+}
+
+# Wrapper Script
+
+```
+#!/bin/bash
+# tf.sh
+# ------------------------------------------------------------
+# This wrapper ensures Terraform uses the project-local config
+# instead of ~/.terraformrc or global settings.
+#
+# Developers run Terraform like:
+#   ./tf.sh init
+#   ./tf.sh apply
+#
+# CI/CD can run plain `terraform` without using this wrapper.
+
+export TF_CLI_CONFIG_FILE="$(pwd)/terraform.d/terraform.rc"
+terraform "$@"
+```
+
+### Symlinks: How Modules are Exposed to Terraform
+
+`terraform.d/modules/` contains *symlinks* pointing to the real module folders.
+
+```
+terraform.d/modules/role → ../../modules/role
+```
+
+This means:
+- Terraform sees modules under `terraform.d/modules`
+- You edit modules under `modules/`
+- Symlinks update automatically
+- Git preserves symlinks when cloning (maybe not with Windows)
+- No duplication of the module core (symlinks!)
+
+### Example:
+
+`projects/dev/webserver/alpha/main.tf`
+
+```hcl
+# main.tf
+# ------------------------------------------------------------
+# This project uses the webserver role module.
+# Thanks to terraform.d/terraform.rc, we can use clean module paths.
+
+module "webserver" {
+  source = "role/webserver"   # ← Clean, stable, no ../../
+  name   = var.name           # ← Pass project-specific name
+}
+
+```
+
+*Edit modules locally*
+Edit files under `modules/role/webserver/*`
+
+Terraform sees changes instantly because 
+`terraform.d/modules/role → ../../modules/role`
+
+- `git status` shows real module changes
+- `git push` works normally
+
+### Cloning Repo on Another Machine
+
+Works!
+
 # Project Naming Convention
 proj-<role>-<name>
 
