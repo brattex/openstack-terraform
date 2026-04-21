@@ -3,7 +3,7 @@
 # Copy this file to terraform.tfvars and adjust as needed.
 # ---------------------------------------------------------
 
-instance_name         = "web01"
+instance_name         = "webserver-template"
 external_network_name = "Public Internet"
 
 # Example values — replace with real ones

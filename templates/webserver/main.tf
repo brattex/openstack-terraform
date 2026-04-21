@@ -67,7 +67,8 @@ module "network" {
 # This is the reusable VM TYPE.
 # ---------------------------------------------------------
 module "webserver" {
-  source = "../../modules/role/webserver"
+  #source = "../../modules/role/webserver"
+  source = "role/webserver"	# Clean module reference (replaced ../../)
 
   # Instance identity
   name        = var.instance_name
