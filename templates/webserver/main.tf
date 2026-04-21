@@ -52,7 +52,7 @@ provider "openstack" {}
 # This ensures each project is fully isolated.
 # ---------------------------------------------------------
 module "network" {
-  source = "../../modules/network"
+  source = "network"
 
   external_network_name = var.external_network_name
 }

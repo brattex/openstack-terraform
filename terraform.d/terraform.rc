@@ -1,0 +1,17 @@
+# ------------------------------------------------------------
+# terraform.d/terraform.rc
+# Project-local Terraform module registry configuration
+# This forces Terraform to load modules from terraform.d/modules
+# instead of using relative paths or downloading from Git.
+# ------------------------------------------------------------
+
+module_installation {
+  filesystem_mirror {
+    path    = "terraform.d/modules"   # ← Local module registry
+    include = ["*"]                   # ← Include all modules
+  }
+
+  direct {
+    exclude = ["*"]                   # ← Disable external module downloads
+  }
+}
