@@ -71,7 +71,7 @@ module_installation {
 
 # Wrapper Script
 
-```
+```hcl
 #!/bin/bash
 # tf.sh
 # ------------------------------------------------------------
