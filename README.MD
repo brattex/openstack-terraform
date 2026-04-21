@@ -21,6 +21,47 @@ This pattern is the closest thing Terraform has to a **project‑local chroot**,
 
 ## 🧱 1. Repository Layout
 
+```hcl
+OPENSTACK/                     # ← Repo root
+  modules/                     # ← Real module source code
+    compute/                   # ← Module: compute resources
+    floatingip/                # ← Module: floating IP logic
+    network/                   # ← Module: networks, subnets, routers
+    role/                      # ← Role modules (webserver, runner, etc.)
+      webserver/
+      runner/
+    security/                  # ← Security groups, rules, etc.
+
+  terraform.d/                 # ← Project-local Terraform config (NOT global)
+    terraform.rc               # ← Tells Terraform to load modules from terraform.d/modules
+    modules/                   # ← Local module registry (symlinked to real modules)
+      compute/                 # ← Symlink → ../../modules/compute
+      floatingip/              # ← Symlink → ../../modules/floatingip
+      network/                 # ← Symlink → ../../modules/network
+      role/                    # ← Symlink → ../../modules/role
+      security/                # ← Symlink → ../../modules/security
+
+  projects/                    # ← All deployments live here
+    dev/                       # ← Environment: dev
+      webserver/               # ← Service type
+        alpha/                 # ← Project instance
+        beta/
+      runner/
+        gitlab/
+    prod/                      # ← Environment: prod
+      webserver/
+        customer1/
+        customer2/
+
+  templates/                   # ← Starter templates for new projects
+    gitlab-runner/
+    webserver/
+
+  tf.sh                        # ← Wrapper script so Terraform uses project-local config
+  .gitignore
+  README.md
+
+```
 
 ---
 
@@ -29,6 +70,12 @@ This pattern is the closest thing Terraform has to a **project‑local chroot**,
 Terraform normally resolves module paths **relative to the project folder**, 
 which breaks as soon as you introduce nested project folders:
 
+```hcl
+projects/proj1 → ../../modules
+projects/dev/proj2 → ../../../modules
+projects/dev/webserver/proj3 → ../../../../modules
+
+```
 
 This is unmaintainable.
 
